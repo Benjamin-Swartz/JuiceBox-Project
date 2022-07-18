@@ -8,7 +8,8 @@ const {
     updatePost,
     getAllPosts,
     getPostsByUser,
-    addTagsToPost
+    addTagsToPost,
+    createTags
 } = require('./index');
 
 async function dropTables() {
@@ -136,6 +137,7 @@ async function rebuildDB() {
         await dropTables();
         await createTables();
         await createInitialUsers();
+        await createInitialTags();
         await createInitialPosts();
     } catch (error) {
         console.log("Error during rebuildDB")

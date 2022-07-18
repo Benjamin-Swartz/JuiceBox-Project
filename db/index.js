@@ -129,19 +129,21 @@ async function createTags(tagList) {
         // returning nothing, we'll query after
         () => {
             `INSERT INTO tags(name)
-        VALUES ($1), ($2), ($3)
+        VALUES (${insertValues})
         ON CONFLICT (name) DO NOTHING;`}
         // select all tags where the name is in our taglist
         // return the rows from the query
         const { rows } = await client.query(
             `SELECT * FROM tags
         WHERE name
-        IN ($1, $2, $3);`)
+        IN (${tagList});`)
         return rows
     } catch (error) {
         throw error;
     }
 }
+
+
 
 async function updatePost(postId, fields = {}) {
     // read off the tags & remove that field 
@@ -311,5 +313,6 @@ module.exports = {
     updatePost,
     getAllPosts,
     getPostsByUser,
-    addTagsToPost
+    addTagsToPost,
+    createTags
 }
