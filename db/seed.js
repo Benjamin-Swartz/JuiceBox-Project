@@ -56,8 +56,9 @@ async function createTables() {
           name VARCHAR(255) UNIQUE NOT NULL
         );
         CREATE TABLE post_tags(
-           "postId" INTEGER REFERENCES posts(id) UNIQUE NOT NULL,
-           "tagId" INTEGER REFERENCES tags(id) UNIQUE NOT NULL
+           "postId" INTEGER REFERENCES posts(id) UNIQUE,
+           "tagId" INTEGER REFERENCES tags(id), 
+           UNIQUE ("postId", "tagId")
         );
       `);
 
@@ -137,8 +138,8 @@ async function rebuildDB() {
         await dropTables();
         await createTables();
         await createInitialUsers();
-        await createInitialTags();
         await createInitialPosts();
+        await createInitialTags();
     } catch (error) {
         console.log("Error during rebuildDB")
         throw error;
@@ -201,8 +202,10 @@ async function createInitialTags() {
             '#youcandoanything',
             '#catmandoeverything'
         ]);
+        console.log(happy, "!!!!!!!!!!!!WDSFCFDSC");
 
         const [postOne, postTwo, postThree] = await getAllPosts();
+        console.log(await getAllPosts(), "!!!!!!!");
 
         await addTagsToPost(postOne.id, [happy, inspo]);
         await addTagsToPost(postTwo.id, [sad, inspo]);
