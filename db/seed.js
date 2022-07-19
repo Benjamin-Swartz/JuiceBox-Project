@@ -9,7 +9,8 @@ const {
     getAllPosts,
     getPostsByUser,
     addTagsToPost,
-    createTags
+    createTags,
+    getPostsByTagName
 } = require('./index');
 
 async function dropTables() {
@@ -56,7 +57,7 @@ async function createTables() {
           name VARCHAR(255) UNIQUE NOT NULL
         );
         CREATE TABLE post_tags(
-           "postId" INTEGER REFERENCES posts(id) UNIQUE,
+           "postId" INTEGER REFERENCES posts(id),
            "tagId" INTEGER REFERENCES tags(id), 
            UNIQUE ("postId", "tagId")
         );
@@ -150,7 +151,7 @@ async function rebuildDB() {
 
 async function testDB() {
     try {
-        console.log(tagList)
+        // console.log(tagList)
         console.log("Starting to test database...");
 
         console.log("Calling getAllUsers");
@@ -186,6 +187,10 @@ async function testDB() {
             tags: ["#youcandoanything", "#redfish", "#bluefish"]
         });
         console.log("Result:", updatePostTagsResult);
+
+        console.log("Calling getPostsByTagName with #happy");
+        const postsWithHappy = await getPostsByTagName("#happy");
+        console.log("Result:", postsWithHappy);
     } catch (error) {
         console.log("Error during testDB");
         throw error;
