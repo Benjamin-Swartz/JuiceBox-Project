@@ -14,10 +14,10 @@ apiRouter.use(async (req, res, next) => {
         next();
     } else if (auth.startsWith(prefix)) {
         const token = auth.slice(prefix.length);
-
+        console.log(token);
         try {
-            const { id } = jwt.verify(token, JWT_SECRET);
-
+            const {id}  = jwt.verify(token, JWT_SECRET);
+            console.log(typeof id ,"snaksjcnsjc");
             if (id) {
                 req.user = await getUserById(id);
                 next();
@@ -34,6 +34,7 @@ apiRouter.use(async (req, res, next) => {
 });
 
 apiRouter.use((req, res, next) => {
+    console.log("looking for user");
     if (req.user) {
       console.log("User is set:", req.user);
     }
