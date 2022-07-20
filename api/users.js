@@ -10,11 +10,16 @@ usersRouter.use((req, res, next) => {
 
 const { getAllUsers, getUserByUsername } = require('../db');
 
-usersRouter.get('/', async (req, res) => {
-    const users = await getAllUsers();
-    res.send({
-        users
-    });
+usersRouter.get('/', async (req, res, next) => {
+    try {
+        const users = await getAllUsers();
+        res.send({
+            users
+        });
+        
+    } catch ({name, message}) {
+        next({name, message})
+    }
 });
 
 usersRouter.post('/login', async (req, res, next) => {
@@ -33,7 +38,7 @@ usersRouter.post('/login', async (req, res, next) => {
   
       if (user && user.password == password) {
         // create token & return to user
-        const token = jwt.sign((user.id, user.username), process.env.JWT_SECRET); 
+        const token = jwt.sign((user.id, username), process.env.JWT_SECRET); 
         res.send({ message: "you're logged in!", token });
       } else {
         next({ 
