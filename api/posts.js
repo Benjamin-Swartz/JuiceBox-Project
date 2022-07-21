@@ -36,7 +36,7 @@ postRouter.use((req, res, next) => {
 
 const { getAllPosts } = require('../db');
 
-postRouter.get('/', async (req, res, next) => {
+postRouter.get('/posts', async (req, res, next) => {
     try {
         const allPosts = await getAllPosts();
 
