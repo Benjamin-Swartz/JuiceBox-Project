@@ -36,11 +36,21 @@ postRouter.use((req, res, next) => {
 
 const { getAllPosts } = require('../db');
 
-postRouter.get('/', async (req, res) => {
-    const posts = await getAllPosts();
-    res.send({
-        posts
-    });
+postRouter.get('/', async (req, res, next) => {
+    try {
+        const allPosts = await getAllPosts();
+
+        const posts = allPosts.filter(post => {
+            // keep a post if it is either active, or if it belongs to the current user
+            return post.active || (req.user && post.author.id === req.user.id);
+        });
+
+        res.send({
+            posts
+        });
+    } catch ({ name, message }) {
+        next({ name, message });
+    }
 });
 
 postRouter.patch('/:postId', requireUser, async (req, res, next) => {
